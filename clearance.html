@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>חיסולי מלאי – בנקו תאורה</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ======== הגדרות ======== */
+:root{
+  --bg:#f2f3f7;--surface:#fff;--ink:#151821;--muted:#5d6475;--line:#dfe2ea;--soft:#eceef4;
+  --bar:#141824;--bar-ink:#f5f6fa;--bar-muted:#a8afc2;--tile:#f3f4f6;
+  --sale:#d8342c;--sale-bg:#fdeceb;--ok:#13854f;--wa:#1faa59;--wa-d:#148a46;
+  --spectrum:linear-gradient(90deg,#f29a12,#f6c453 22%,#e8455f 44%,#8b6cf0 66%,#2f7bf0 84%,#0fa596);
+  --f-head:"Rubik","IBM Plex Sans Hebrew",system-ui,sans-serif;
+  --f-ui:"IBM Plex Sans Hebrew","Rubik",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:16px;
+  --sl:max(14px,env(safe-area-inset-left,0px));--sr:max(14px,env(safe-area-inset-right,0px));
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0c0e14;--surface:#161a24;--ink:#eef0f6;--muted:#9aa2b6;--line:#272c3a;--soft:#1d2230;
+  --bar:#080a10;--tile:#e9ebef;--sale:#ff6b61;--sale-bg:#3a1714;--ok:#3fcf86;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding:0 var(--sr) calc(110px + var(--sb)) var(--sl)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:var(--st);z-index:40;background:var(--bar)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid #2f7bf0;outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+.wrap{max-width:1240px;margin:0 auto}
+
+/* ======== סרגל עליון ======== */
+.appbar{position:sticky;top:var(--st);z-index:30;background:var(--bar);color:var(--bar-ink);
+  margin-inline:calc(-1*var(--sr)) calc(-1*var(--sl));padding-inline:var(--sr) var(--sl)}
+.appbar-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:12px;height:58px}
+.appbar img{height:28px;width:auto;display:block}
+.ttl{border-inline-start:1px solid #343a4c;padding-inline-start:12px;line-height:1.2;flex:1;min-width:0}
+.ttl b{display:block;font-family:var(--f-head);font-weight:700;font-size:16px}
+.ttl span{font-size:12px;color:var(--bar-muted)}
+.ttl b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:440px){.ttl span{display:none}.cartbtn.back{padding:0 10px}.appbar img{height:24px}}
+.cartbtn{position:relative;background:#232838;border:0;border-radius:12px;height:42px;min-width:42px;padding:0 12px;
+  display:flex;align-items:center;gap:6px;color:#fff;font-weight:600}
+.cartbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+.cartbtn .cnt{background:var(--sale);border-radius:99px;font-size:12px;min-width:20px;height:20px;line-height:20px;padding:0 6px;text-align:center}
+.spectrum{height:3px;background:var(--spectrum);margin-inline:calc(-1*var(--sr)) calc(-1*var(--sl))}
+
+/* ======== חיפוש וסינון ======== */
+.hero{padding:16px 0 6px}
+.hero h1{font-family:var(--f-head);font-size:24px;margin:0 0 2px;font-weight:800}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+.tools{position:sticky;top:calc(var(--st) + 58px);z-index:20;background:var(--bg);padding:10px 0 8px;
+  margin-inline:calc(-1*var(--sr)) calc(-1*var(--sl));padding-inline:var(--sr) var(--sl)}
+.tools-in{max-width:1240px;margin:0 auto}
+.srow{display:flex;gap:8px}
+.search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 12px;height:44px}
+.search svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2;flex:none}
+.search input{border:0;background:transparent;outline:0;flex:1;min-width:0;font-size:16px}
+.search .clr{border:0;background:none;color:var(--muted);font-size:20px;padding:0 2px}
+select.sort{height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 10px;font-size:14px;max-width:40%;flex:none}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:13px;white-space:nowrap}
+.chip small{color:var(--muted);margin-inline-start:4px}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip[aria-pressed=true] small{color:inherit;opacity:.7}
+.meta{font-size:13px;color:var(--muted);padding:8px 2px 0}
+
+/* ======== קוביות מוצר ======== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;padding-top:6px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;
+  content-visibility:auto;contain-intrinsic-size:auto 330px;position:relative}
+.card.in{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+.pic{all:unset;cursor:pointer;display:block;aspect-ratio:1/1;background:var(--tile);position:relative}
+.pic img{width:100%;height:100%;object-fit:contain;display:block;padding:8px;mix-blend-mode:multiply}
+.pic .ph{position:absolute;inset:0;display:grid;place-items:center;color:#9aa1b0}
+.pic .ph svg{width:44%;height:44%;stroke:currentColor;fill:none;stroke-width:1.2}
+.badge{position:absolute;top:8px;inset-inline-start:8px;background:var(--sale);color:#fff;font-weight:700;font-family:var(--f-head);
+  font-size:13px;border-radius:8px;padding:2px 7px;direction:ltr}
+.approx{position:absolute;bottom:6px;inset-inline-end:6px;background:rgba(20,24,36,.7);color:#fff;font-size:10px;border-radius:6px;padding:1px 6px}
+.incart{position:absolute;top:8px;inset-inline-end:8px;background:var(--ok);color:#fff;font-weight:700;font-size:12px;border-radius:99px;padding:2px 8px}
+.body{padding:9px 10px 10px;display:flex;flex-direction:column;gap:4px;flex:1}
+.nm{all:unset;cursor:pointer;font-size:13.5px;font-weight:500;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.code{font-size:11.5px;color:var(--muted)}
+.prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:2px}
+.now{font-family:var(--f-head);font-weight:800;font-size:19px;color:var(--sale)}
+.was{color:var(--muted);text-decoration:line-through;font-size:13px}
+.stock{font-size:11.5px;color:var(--muted)}
+.act{margin-top:auto;padding-top:6px}
+.add{width:100%;height:38px;border-radius:10px;border:0;background:var(--ink);color:var(--surface);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.add svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.4;fill:none}
+.step{display:flex;align-items:center;height:38px;border:1.5px solid var(--ok);border-radius:10px;overflow:hidden}
+.step button{width:38px;height:100%;border:0;background:transparent;font-size:20px;font-weight:600;color:var(--ok)}
+.step input{flex:1;min-width:0;text-align:center;border:0;background:transparent;font-weight:700;font-size:16px;-moz-appearance:textfield}
+.step input::-webkit-inner-spin-button{-webkit-appearance:none}
+.empty{text-align:center;color:var(--muted);padding:50px 10px}
+
+/* ======== סרגל תחתון ======== */
+.dock{position:fixed;inset:auto 0 0 0;z-index:35;padding:10px var(--sr) calc(10px + var(--sb)) var(--sl);
+  background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.dock-in{max-width:640px;margin:0 auto;display:flex;gap:8px}
+.dock .sum{all:unset;cursor:pointer;flex:1;background:var(--bar);color:#fff;border-radius:14px;padding:8px 14px;display:flex;flex-direction:column;justify-content:center;line-height:1.25}
+.dock .sum b{font-family:var(--f-head);font-size:17px}
+.dock .sum span{font-size:12px;color:var(--bar-muted)}
+.wa{background:var(--wa);color:#fff;border:0;border-radius:14px;padding:0 16px;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;text-decoration:none;min-height:52px}
+.wa:active{background:var(--wa-d)}
+.wa svg{width:22px;height:22px;fill:#fff}
+
+/* ======== חלוניות ======== */
+dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100%;height:100%;margin:0;color:var(--ink)}
+dialog::backdrop{background:rgba(8,10,16,.55)}
+.sheet{position:absolute;inset:auto 0 0 0;max-width:640px;margin:0 auto;background:var(--surface);border-radius:20px 20px 0 0;
+  max-height:calc(100% - var(--st) - 24px);display:flex;flex-direction:column;padding-bottom:var(--sb)}
+@media(min-width:700px){.sheet{inset:auto 0 auto 0;top:50%;transform:translateY(-50%);border-radius:20px;max-height:88%}}
+.sh-h{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.sh-h h2{margin:0;font-family:var(--f-head);font-size:18px;flex:1}
+.x{border:0;background:var(--soft);border-radius:99px;width:34px;height:34px;font-size:18px;line-height:1}
+.sh-b{overflow:auto;padding:14px 16px;flex:1}
+.sh-f{padding:10px 16px 14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+
+/* פרטי מוצר */
+.dimg{aspect-ratio:4/3;background:var(--tile);border-radius:14px;position:relative;overflow:hidden}
+.dimg img{width:100%;height:100%;object-fit:contain;padding:14px;mix-blend-mode:multiply}
+.dname{font-family:var(--f-head);font-size:18px;font-weight:600;margin:12px 0 2px;line-height:1.35}
+.drow{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.dprice{display:flex;align-items:baseline;gap:10px;margin:10px 0 4px}
+.dprice .now{font-size:28px}
+.dprice .was{font-size:16px}
+.note{font-size:12px;color:var(--muted)}
+.qbox{margin-top:14px;background:var(--soft);border-radius:14px;padding:12px}
+.qbox label{font-weight:600;font-size:14px;display:block;margin-bottom:8px}
+.qbox .step{height:50px;background:var(--surface)}
+.qbox .step button{width:54px;font-size:24px}
+.qbox .step input{font-size:20px}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.quick button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 12px;font-size:13px}
+.line-t{display:flex;justify-content:space-between;margin-top:10px;font-size:14px}
+.btn{height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:var(--ink)}
+.btn.pri{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* סל */
+.ci{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.ci:last-child{border-bottom:0}
+.ci .t{width:56px;height:56px;border-radius:10px;background:var(--tile);overflow:hidden;display:grid;place-items:center}
+.ci .t img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:3px}
+.ci .t svg{width:26px;height:26px;stroke:#9aa1b0;fill:none;stroke-width:1.3}
+.ci .n{font-size:13px;font-weight:500;line-height:1.3}
+.ci .s{font-size:12px;color:var(--muted)}
+.ci .r{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ci .step{height:34px;width:112px}
+.ci .step button{width:32px;font-size:18px}
+.ci .lt{font-weight:700;font-size:14px}
+.rm{border:0;background:none;color:var(--muted);font-size:12px;text-decoration:underline;padding:0}
+.tot{background:var(--soft);border-radius:14px;padding:10px 14px;margin-top:12px}
+.tot div{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}
+.tot .g{font-family:var(--f-head);font-weight:800;font-size:18px;border-top:1px solid var(--line);margin-top:4px;padding-top:6px}
+.fields{display:grid;gap:8px;margin-top:14px}
+.fields h3{margin:0;font-size:14px}
+.fields input,.fields textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface);font-size:16px}
+.fields textarea{min-height:64px;resize:vertical}
+.toast{position:fixed;bottom:calc(84px + var(--sb));left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:.25s;background:var(--bar);color:#fff;
+  border-radius:12px;padding:10px 16px;font-size:14px;z-index:60;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.err{color:var(--sale);font-size:13px}
+.preview{white-space:pre-wrap;font-size:12.5px;background:var(--soft);border-radius:12px;padding:10px;margin-top:12px;font-family:var(--f-ui);max-height:240px;overflow:auto}
+details summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:12px}
+</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#f4f4f2"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+<header class="appbar"><div class="appbar-in">
+  <a href="index.html" style="display:block"><img src="data:image/png;base64,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" alt="בנקו תאורה – לקטלוג"></a>
+  <div class="ttl"><b>חיסולים</b><span>הזמנה מהירה · מחירים לפני מע״מ</span></div>
+  <a class="cartbtn back" href="index.html" style="text-decoration:none"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>לקטלוג</a>
+  <button class="cartbtn" id="openCart" aria-label="סל הזמנה"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg><span class="cnt" id="cnt" hidden>0</span></button>
+</div></header>
+<div class="spectrum"></div>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>מוצרים בחיסול – עד <span id="maxd">90</span>% הנחה</h1>
+    <p>בוחרים כמות, מוסיפים לסל ושולחים את ההזמנה בוואטסאפ בלחיצה אחת. עד גמר המלאי.</p>
+  </section>
+  <div class="tools"><div class="tools-in">
+    <div class="srow">
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="חיפוש לפי שם או מק״ט" autocomplete="off" enterkeyhint="search">
+        <button class="clr" id="qclr" hidden aria-label="ניקוי">×</button></label>
+      <select class="sort" id="sort" aria-label="מיון">
+        <option value="grp">לפי קבוצה – מהיקרה לזולה</option>
+        <option value="disc">הנחה גבוהה</option>
+        <option value="low">מחיר נמוך</option>
+        <option value="high">מחיר גבוה</option>
+        <option value="stock">מלאי גדול</option>
+        <option value="name">שם</option>
+      </select>
+    </div>
+    <div class="chips" id="cats"></div>
+    <div class="meta" id="meta"></div>
+  </div></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden>לא נמצאו מוצרים. נסו חיפוש אחר.</div>
+</main>
+
+<div class="dock" id="dock" hidden><div class="dock-in">
+  <button class="sum" id="dockSum"><b id="dockTot">0 ₪</b><span id="dockCnt">0 פריטים · לצפייה בסל</span></button>
+  <a class="wa" id="dockWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.5-.3z"/></svg>שליחה לסוכן</a>
+</div></div>
+
+<dialog id="pdlg" aria-label="פרטי מוצר"><div class="sheet">
+  <div class="sh-h"><h2>בחירת כמות</h2><button class="x" data-close aria-label="סגירה">×</button></div>
+  <div class="sh-b" id="pbody"></div>
+  <div class="sh-f"><button class="btn pri" id="padd">הוספה לסל</button></div>
+</div></dialog>
+
+<dialog id="cdlg" aria-label="סל הזמנה"><div class="sheet">
+  <div class="sh-h"><h2>סל ההזמנה</h2><button class="x" data-close aria-label="סגירה">×</button></div>
+  <div class="sh-b" id="cbody"></div>
+  <div class="sh-f" id="cfoot"></div>
+</div></dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ===== הגדרות – לעדכון ===== */
+const WA_PHONE = "";        // מספר הוואטסאפ של שחר בפורמט בינלאומי, למשל 972501234567. ריק = הלקוח בוחר איש קשר
+const VAT = 0.18;           // מע״מ
+const SELLER = "שחר – בנקו תאורה";
+
+/* ===== עזר ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nf=new Intl.NumberFormat("he-IL",{maximumFractionDigits:2,minimumFractionDigits:0});
+const money=n=>nf.format(Math.round(n*100)/100)+" ₪";
+const PH='<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+const PLUS='<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(_){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}};
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)}
+
+let ITEMS=[],BY={},IMG={};
+let cart=store.get("benko-clear-cart",{});   // {code:qty}
+let cust=store.get("benko-clear-cust",{biz:"",name:"",phone:"",note:""});
+let cat="הכל",q="",sort="grp",GRANK={};
+const VCAT="שביליות ושקועי קיר";
+const isTop=x=>x.n.includes("ארקוס");
+const isPath=x=>["שביליות","שביליות - שקועות","שקועי קיר"].includes(x.g)||x.n.includes("שבילית")||x.n.startsWith("שקוע קיר");
+
+const sale=it=>Math.round(it.p*(100-it.d))/100;
+const imgTag=(it,cls="")=>it.i&&IMG[it.i]?`<img src="${IMG[it.i]}" alt="" loading="lazy" ${cls}>`:"";
+
+/* ---------- store access: price data is encrypted, the key comes only in the store link (#k-...) ---------- */
+const BK_KEY="benko_k";let BK_K=null;
+function bkKey(){if(BK_K)return BK_K;let k=null;try{const h=location.hash.match(/^#k-([0-9a-f]{64})$/);if(h){k=h[1];try{localStorage.setItem(BK_KEY,k)}catch(_){}try{history.replaceState(null,"",location.pathname+location.search)}catch(_){try{location.hash=""}catch(__){}}}}catch(_){}
+ if(!k){try{k=localStorage.getItem(BK_KEY)}catch(_){}}return BK_K=k}
+async function bkOpen(url){const k=bkKey();if(!k||!window.crypto||!crypto.subtle)return null;try{const r=await fetch(url,{cache:"no-store"});const e=await r.json();const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+ const kk=await crypto.subtle.importKey("raw",new Uint8Array(k.match(/../g).map(h=>parseInt(h,16))),"AES-GCM",false,["decrypt"]);const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b(e.iv)},kk,b(e.ct));return JSON.parse(new TextDecoder().decode(pt))}
+ catch(err){if(err&&err.name==="OperationError"){try{localStorage.removeItem(BK_KEY)}catch(_){}BK_K=null}return null}}
+
+/* ===== טעינה ===== */
+Promise.all([bkOpen("s/c.json").then(d=>{if(!d)throw "locked";return d}),fetch("c/img.json").then(r=>r.json()).catch(()=>({}))]).then(([a,b])=>{
+  ITEMS=a;IMG=b;ITEMS.forEach(x=>BY[x.c]=x);
+  {const s={},n={};ITEMS.forEach(x=>{s[x.g]=(s[x.g]||0)+sale(x);n[x.g]=(n[x.g]||0)+1});for(const g in s)GRANK[g]=s[g]/n[g];}
+  for(const c in cart){if(!BY[c]||cart[c]<=0)delete cart[c];else cart[c]=Math.min(cart[c],BY[c].s)}
+  $("#maxd").textContent=Math.max(...ITEMS.map(x=>x.d));
+  buildCats();render();updateCart();
+}).catch(e=>{$("#grid").innerHTML=e==="locked"?'<div class="empty"><b>מבצעי החיסול זמינים ללקוחות בנקו בלבד</b><br>לקבלת גישה פנו לסוכן שלכם בבנקו תאורה.</div>':'<div class="empty">לא הצלחנו לטעון את רשימת המוצרים. רעננו את הדף.</div>'});
+
+function buildCats(){
+  const cnt={};ITEMS.forEach(x=>cnt[x.g]=(cnt[x.g]||0)+1);
+  const list=[["הכל",ITEMS.length],[VCAT,ITEMS.filter(isPath).length],...Object.entries(cnt).sort((a,b)=>b[1]-a[1])];
+  $("#cats").innerHTML=list.map(([n,c])=>`<button class="chip" data-cat="${esc(n)}" aria-pressed="${n===cat}">${esc(n)}<small>${c}</small></button>`).join("");
+}
+$("#cats").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;cat=b.dataset.cat;
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));render();window.scrollTo({top:0,behavior:"smooth"})});
+$("#q").addEventListener("input",e=>{q=e.target.value.trim();$("#qclr").hidden=!q;render()});
+$("#qclr").addEventListener("click",e=>{e.preventDefault();$("#q").value="";q="";$("#qclr").hidden=true;render()});
+$("#sort").addEventListener("change",e=>{sort=e.target.value;render()});
+
+function filtered(){
+  const words=q.toLowerCase().split(/\s+/).filter(Boolean);
+  let r=ITEMS.filter(x=>(cat==="הכל"||(cat===VCAT?isPath(x):x.g===cat))&&words.every(w=>(x.n+" "+x.c).toLowerCase().includes(w)));
+  const S={grp:(a,b)=>isTop(b)-isTop(a)||isPath(b)-isPath(a)||GRANK[b.g]-GRANK[a.g]||a.g.localeCompare(b.g,"he")||sale(b)-sale(a),disc:(a,b)=>b.d-a.d||sale(a)-sale(b),low:(a,b)=>sale(a)-sale(b),high:(a,b)=>sale(b)-sale(a),stock:(a,b)=>b.s-a.s,name:(a,b)=>a.n.localeCompare(b.n,"he")};
+  return r.sort(S[sort]);
+}
+
+function cardHTML(x){
+  const qn=cart[x.c]||0;
+  return `<article class="card${qn?" in":""}" data-c="${x.c}">
+    <button class="pic" data-open aria-label="${esc(x.n)}">${imgTag(x)||`<span class="ph">${PH}</span>`}
+      <span class="badge">-${x.d}%</span>${qn?`<span class="incart">בסל: ${qn}</span>`:""}${x.a?'<span class="approx">תמונה להמחשה</span>':""}</button>
+    <div class="body">
+      <button class="nm" data-open>${esc(x.n)}</button>
+      <div class="code mono">מק״ט ${x.c}</div>
+      <div class="prices"><span class="now num">${money(sale(x))}</span><span class="was num">${money(x.p)}</span></div>
+      <div class="stock">במלאי: ${x.s}</div>
+      <div class="act">${qn?stepHTML(x.c,qn):`<button class="add" data-add>${PLUS}הוספה</button>`}</div>
+    </div></article>`;
+}
+const stepHTML=(c,qn)=>`<div class="step"><button data-inc="1" aria-label="הוספה">+</button><input class="num" inputmode="numeric" value="${qn}" data-qty="${c}" aria-label="כמות"><button data-inc="-1" aria-label="הפחתה">−</button></div>`;
+
+function render(){
+  const r=filtered();
+  $("#grid").innerHTML=r.map(cardHTML).join("");
+  $("#empty").hidden=r.length>0;
+  $("#meta").textContent=`${r.length} מוצרים${cat!=="הכל"?" · "+cat:""}`;
+}
+function refreshCard(c){const el=document.querySelector(`.card[data-c="${c}"]`);if(el)el.outerHTML=cardHTML(BY[c])}
+
+/* ===== סל ===== */
+function setQty(c,n,silent){
+  const it=BY[c];n=Math.max(0,Math.min(parseInt(n)||0,it.s));
+  const was=cart[c]||0;
+  if(n)cart[c]=n;else delete cart[c];
+  store.set("benko-clear-cart",cart);
+  if(!silent&&n>was&&n===it.s&&n>0)toast(`הגעת למלאי המקסימלי (${it.s})`);
+  refreshCard(c);updateCart();
+  if($("#cdlg").open)renderCart();
+}
+$("#grid").addEventListener("click",e=>{
+  const card=e.target.closest(".card");if(!card)return;const c=card.dataset.c;
+  if(e.target.closest("[data-open]"))return openProduct(c);
+  if(e.target.closest("[data-add]")){setQty(c,1);toast("נוסף לסל");return}
+  const inc=e.target.closest("[data-inc]");if(inc)setQty(c,(cart[c]||0)+ +inc.dataset.inc);
+});
+$("#grid").addEventListener("change",e=>{if(e.target.dataset.qty)setQty(e.target.dataset.qty,e.target.value)});
+
+function totals(){
+  let n=0,lines=0,sub=0,was=0;
+  for(const c in cart){const it=BY[c];if(!it)continue;lines++;n+=cart[c];sub+=sale(it)*cart[c];was+=it.p*cart[c]}
+  sub=Math.round(sub*100)/100;const vat=Math.round(sub*VAT*100)/100;
+  return {n,lines,sub,vat,tot:Math.round((sub+vat)*100)/100,save:was-sub};
+}
+function updateCart(){
+  const t=totals();
+  $("#cnt").hidden=!t.lines;$("#cnt").textContent=t.lines;
+  $("#dock").hidden=!t.lines;
+  $("#dockTot").textContent=money(t.sub)+" + מע״מ";
+  $("#dockCnt").textContent=`${t.lines} פריטים · ${t.n} יח׳ · לצפייה בסל`;
+  $("#dockWa").href=waLink();
+}
+
+function orderText(){
+  const t=totals();const L=[];
+  L.push("*הזמנת חיסול מלאי – בנקו תאורה*");
+  if(cust.biz)L.push("עסק: "+cust.biz);
+  if(cust.name)L.push("שם: "+cust.name);
+  if(cust.phone)L.push("טלפון: "+cust.phone);
+  L.push("");
+  let i=0;
+  for(const c in cart){const it=BY[c];if(!it)continue;i++;
+    L.push(`${i}. *${it.c}* – ${it.n}`);
+    L.push(`   כמות: *${cart[c]}* × ${money(sale(it))} = ${money(sale(it)*cart[c])}`);}
+  L.push("");
+  L.push(`סה״כ לפני מע״מ: ${money(t.sub)}`);
+  L.push(`מע״מ ${Math.round(VAT*100)}%: ${money(t.vat)}`);
+  L.push(`*סה״כ כולל מע״מ: ${money(t.tot)}*`);
+  if(cust.note){L.push("");L.push("הערות: "+cust.note)}
+  return L.join("\n");
+}
+const waLink=()=>`https://wa.me/${WA_PHONE.replace(/\D/g,"")}?text=${encodeURIComponent(orderText())}`;
+
+function renderCart(){
+  const t=totals();
+  if(!t.lines){
+    $("#cbody").innerHTML='<div class="empty">הסל ריק.<br>הוסיפו מוצרים מהרשימה.</div>';
+    $("#cfoot").innerHTML='<button class="btn" data-close>חזרה למוצרים</button>';return;
+  }
+  const rows=Object.keys(cart).map(c=>{const it=BY[c];return `<div class="ci" data-c="${c}">
+    <div class="t">${imgTag(it)||PH}</div>
+    <div><div class="n">${esc(it.n)}</div><div class="s mono">${it.c} · ${money(sale(it))} ליח׳ <s>${money(it.p)}</s> · <b style="color:var(--sale)">-${it.d}%</b> · מלאי ${it.s}</div>
+      <button class="rm" data-rm>הסרה</button></div>
+    <div class="r">${stepHTML(c,cart[c])}<span class="lt num">${money(sale(it)*cart[c])}</span></div></div>`}).join("");
+  $("#cbody").innerHTML=rows+`
+    <div class="tot"><div><span>סה״כ לפני מע״מ</span><span class="num">${money(t.sub)}</span></div>
+      <div><span>מע״מ ${Math.round(VAT*100)}%</span><span class="num">${money(t.vat)}</span></div>
+      <div class="g"><span>סה״כ לתשלום</span><span class="num">${money(t.tot)}</span></div>
+      <div style="color:var(--ok);font-size:13px"><span>חסכת לעומת מחיר מחירון</span><span class="num">${money(t.save)}</span></div></div>
+    <div class="fields"><h3>פרטי המזמין</h3>
+      <input id="f-biz" placeholder="שם העסק" value="${esc(cust.biz)}" autocomplete="organization">
+      <div class="row2"><input id="f-name" placeholder="שם איש קשר" value="${esc(cust.name)}" autocomplete="name">
+      <input id="f-phone" placeholder="טלפון" inputmode="tel" value="${esc(cust.phone)}" autocomplete="tel"></div>
+      <textarea id="f-note" placeholder="הערות (אספקה, איסוף, תאריך…)">${esc(cust.note)}</textarea>
+      <div class="err" id="ferr" hidden>נא למלא שם עסק או שם איש קשר</div></div>
+    <details><summary>תצוגה מקדימה של ההודעה</summary><div class="preview" id="prev"></div></details>`;
+  $("#prev").textContent=orderText();
+  $("#cfoot").innerHTML=`<a class="wa" id="cWa" href="${waLink()}" target="_blank" rel="noopener" style="justify-content:center">${$("#dockWa").querySelector("svg").outerHTML}שליחה לסוכן</a>
+    <div class="row2"><button class="btn" id="cCopy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>העתקת ההזמנה</button>
+    <button class="btn" id="cClear">ניקוי הסל</button></div>`;
+}
+$("#cbody").addEventListener("click",e=>{
+  const row=e.target.closest(".ci");if(!row)return;const c=row.dataset.c;
+  if(e.target.closest("[data-rm]"))return setQty(c,0);
+  const inc=e.target.closest("[data-inc]");if(inc)setQty(c,(cart[c]||0)+ +inc.dataset.inc);
+});
+$("#cbody").addEventListener("change",e=>{if(e.target.dataset.qty)setQty(e.target.dataset.qty,e.target.value)});
+$("#cbody").addEventListener("input",e=>{
+  const m={"f-biz":"biz","f-name":"name","f-phone":"phone","f-note":"note"}[e.target.id];if(!m)return;
+  cust[m]=e.target.value;store.set("benko-clear-cust",cust);
+  $("#prev").textContent=orderText();const w=$("#cWa");if(w)w.href=waLink();$("#dockWa").href=waLink();$("#ferr").hidden=true;
+});
+$("#cfoot").addEventListener("click",async e=>{
+  if(e.target.closest("#cWa")&&!cust.biz.trim()&&!cust.name.trim()){e.preventDefault();$("#ferr").hidden=false;$("#f-biz").focus();return}
+  if(e.target.closest("#cCopy")){try{await navigator.clipboard.writeText(orderText());toast("ההזמנה הועתקה – אפשר להדביק בכל צ׳אט")}catch(_){toast("ההעתקה נחסמה – אפשר לשלוח בוואטסאפ")}}
+  if(e.target.closest("#cClear")){const b=e.target.closest("#cClear");if(b.dataset.sure){const cs=Object.keys(cart);cart={};store.set("benko-clear-cart",cart);cs.forEach(refreshCard);updateCart();renderCart()}else{b.dataset.sure=1;b.textContent="ללחוץ שוב לאישור";setTimeout(()=>{if(b.isConnected){delete b.dataset.sure;b.textContent="ניקוי הסל"}},2500)}}
+});
+$("#dockWa").addEventListener("click",e=>{if(!cust.biz.trim()&&!cust.name.trim()){e.preventDefault();openCart();setTimeout(()=>{$("#ferr").hidden=false;$("#f-biz")?.focus()},50)}});
+function openCart(){renderCart();if(!$("#cdlg").open)$("#cdlg").showModal()}
+$("#openCart").onclick=openCart;$("#dockSum").onclick=openCart;
+
+/* ===== חלון מוצר ===== */
+let cur=null,pq=1;
+function openProduct(c){
+  const it=BY[c];cur=c;pq=cart[c]||1;
+  $("#pbody").innerHTML=`<div class="dimg">${imgTag(it)||`<div class="ph" style="position:absolute;inset:0;display:grid;place-items:center;color:#9aa1b0">${PH.replace('<svg','<svg style="width:30%;stroke:currentColor;fill:none;stroke-width:1.2"')}</div>`}<span class="badge">-${it.d}%</span>${it.a?'<span class="approx">תמונה להמחשה</span>':""}</div>
+    <div class="dname">${esc(it.n)}</div>
+    <div class="drow"><span class="mono">מק״ט ${it.c}</span><span>${esc(it.g)}</span><span>במלאי: ${it.s}</span></div>
+    <div class="dprice"><span class="now num">${money(sale(it))}</span><span class="was num">${money(it.p)}</span></div>
+    <div class="note">הנחה של ${it.d}% ממחיר המחירון · מחיר ליחידה, לפני מע״מ · עד גמר המלאי</div>
+    ${it.u?`<a class="note" href="${esc(it.u)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;color:inherit">לדף המוצר באתר בנקו ↗</a>`:""}
+    <div class="qbox"><label for="pq">כמות</label>
+      <div class="step"><button data-pinc="1" aria-label="הוספה">+</button><input id="pq" class="num" inputmode="numeric" value="${pq}"><button data-pinc="-1" aria-label="הפחתה">−</button></div>
+      <div class="quick">${[5,10,20,50].filter(n=>n<it.s).map(n=>`<button data-pset="${n}">${n}</button>`).join("")}<button data-pset="${it.s}">כל המלאי (${it.s})</button></div>
+      <div class="line-t"><span>סה״כ לשורה (לפני מע״מ)</span><b class="num" id="pline"></b></div></div>`;
+  syncP();
+  $("#padd").textContent=cart[c]?"עדכון כמות בסל":"הוספה לסל";
+  if(!$("#pdlg").open)$("#pdlg").showModal();
+}
+function syncP(){const it=BY[cur];pq=Math.max(1,Math.min(parseInt(pq)||1,it.s));$("#pq").value=pq;$("#pline").textContent=money(sale(it)*pq)}
+$("#pbody").addEventListener("click",e=>{const a=e.target.closest("[data-pinc]"),s=e.target.closest("[data-pset]");
+  if(a){pq=pq+ +a.dataset.pinc;syncP()} if(s){pq=+s.dataset.pset;syncP()}});
+$("#pbody").addEventListener("change",e=>{if(e.target.id==="pq"){pq=e.target.value;syncP()}});
+$("#padd").onclick=()=>{const was=cart[cur];setQty(cur,pq,true);$("#pdlg").close();toast(was?"הכמות עודכנה":"נוסף לסל")};
+
+/* סגירת חלונות */
+document.querySelectorAll("dialog").forEach(d=>{
+  d.addEventListener("click",e=>{if(e.target===d||e.target.closest("[data-close]"))d.close()});
+});
+</script>
+</body>
+</html>
