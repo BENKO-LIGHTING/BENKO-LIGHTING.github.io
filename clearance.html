@@ -177,6 +177,7 @@ dialog::backdrop{background:rgba(8,10,16,.55)}
 details summary{cursor:pointer;font-size:13px;color:var(--muted);margin-top:12px}
 </style>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#f4f4f2"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes">
+<style>body.clronly .appbar .back{display:none!important}body.clronly .appbar a[href="index.html"]{pointer-events:none}</style>
 </head>
 <body>
 <header class="appbar"><div class="appbar-in">
@@ -263,12 +264,17 @@ const imgTag=(it,cls="")=>it.i&&IMG[it.i]?`<img src="${IMG[it.i]}" alt="" loadin
 const BK_KEY="benko_k";let BK_K=null;
 function bkKey(){if(BK_K)return BK_K;let k=null;try{const h=location.hash.match(/^#k-([0-9a-f]{64})$/);if(h){k=h[1];try{localStorage.setItem(BK_KEY,k)}catch(_){}try{history.replaceState(null,"",location.pathname+location.search)}catch(_){try{location.hash=""}catch(__){}}}}catch(_){}
  if(!k){try{k=localStorage.getItem(BK_KEY)}catch(_){}}return BK_K=k}
-async function bkOpen(url){const k=bkKey();if(!k||!window.crypto||!crypto.subtle)return null;try{const r=await fetch(url,{cache:"no-store"});const e=await r.json();const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function bkOpen(url,kx){const k=kx||bkKey();if(!k||!window.crypto||!crypto.subtle)return null;try{const r=await fetch(url,{cache:"no-store"});const e=await r.json();const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
  const kk=await crypto.subtle.importKey("raw",new Uint8Array(k.match(/../g).map(h=>parseInt(h,16))),"AES-GCM",false,["decrypt"]);const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:b(e.iv)},kk,b(e.ct));return JSON.parse(new TextDecoder().decode(pt))}
  catch(err){if(err&&err.name==="OperationError"){try{localStorage.removeItem(BK_KEY)}catch(_){}BK_K=null}return null}}
 
+/* clearance-only store key (#c-...): opens this page without access to the catalog prices */
+const BK_KEYC="benko_kc";let BK_C=null;
+function bkKeyC(){if(BK_C)return BK_C;let k=null;try{const h=location.hash.match(/^#c-([0-9a-f]{64})$/);if(h){k=h[1];try{localStorage.setItem(BK_KEYC,k)}catch(_){}try{history.replaceState(null,"",location.pathname+location.search)}catch(_){try{location.hash=""}catch(__){}}}}catch(_){}
+ if(!k){try{k=localStorage.getItem(BK_KEYC)}catch(_){}}return BK_C=k}
+async function bkLoadClr(){bkKeyC();const d=await bkOpen("s/c.json");if(d)return d;const c=bkKeyC();if(c){const d2=await bkOpen("s/c2.json",c);if(d2){document.body.classList.add("clronly");return d2}try{localStorage.removeItem(BK_KEYC)}catch(_){}}throw "locked"}
 /* ===== טעינה ===== */
-Promise.all([bkOpen("s/c.json").then(d=>{if(!d)throw "locked";return d}),fetch("c/img.json").then(r=>r.json()).catch(()=>({}))]).then(([a,b])=>{
+Promise.all([bkLoadClr(),fetch("c/img.json").then(r=>r.json()).catch(()=>({}))]).then(([a,b])=>{
   ITEMS=a;IMG=b;ITEMS.forEach(x=>BY[x.c]=x);
   {const s={},n={};ITEMS.forEach(x=>{s[x.g]=(s[x.g]||0)+sale(x);n[x.g]=(n[x.g]||0)+1});for(const g in s)GRANK[g]=s[g]/n[g];}
   for(const c in cart){if(!BY[c]||cart[c]<=0)delete cart[c];else cart[c]=Math.min(cart[c],BY[c].s)}
