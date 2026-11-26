@@ -663,6 +663,7 @@ body.home .tools,body.home #series,body.home .note{display:none}
 .sp-notes{margin:0}
 .specpg>*{flex-shrink:0}.specpg>.sp-grow{flex-shrink:1}
 body.locked #pbtn{display:none!important}
+.famback{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0 4px}.famback button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:9px 16px;font:500 14px var(--f-ui);cursor:pointer;min-height:40px}.famback b{font-family:var(--f-head);font-size:22px}
 </style>
 
 <header class="appbar"><div class="appbar-in">
@@ -816,14 +817,14 @@ function buildFG(scope){
  return G.map(g=>({...g,o:g.o.map(o=>[...o,scope.filter(o[2]).length]).filter(o=>o[3]>0&&o[3]<=n)}))
   .filter(g=>g.o.length>1||(g.o.length===1&&["ip","tag"].includes(g.id)&&g.o[0][3]<n))}
 let FG=[],FGkey="";const sel={};
-function scopeKey(){return aiIds?"ai:"+aiIds.join(","):SIM?"sim:"+SIM.seed.id+JSON.stringify(AQ&&AQ.labels):AQ?"q:"+JSON.stringify(AQ.labels):"n:"+dept+"/"+sub}
+function scopeKey(){return aiIds?"ai:"+aiIds.join(","):SIM?"sim:"+SIM.seed.id+JSON.stringify(AQ&&AQ.labels):AQ?"q:"+JSON.stringify(AQ.labels):"n:"+dept+"/"+sub+"/"+FAM}
 function scopeLabel(){return aiIds?"ההצעות של Claude":SIM?"דומים ל"+SIM.seed.short:AQ?"תוצאות החיפוש":sub?subL(sub):DL[dept]}
 function drawPanel(){
  $("#panel").innerHTML=`<div class="ph-h">סינון ל<b>${esc(scopeLabel())}</b></div>`+FG.map(g=>`<div class="fg"><h4>${g.t}</h4><div class="opts">${g.o.map(([k,l,,c])=>{
   const dot=g.dot?`<i style="background:${g.dot(k)}"></i>`:"";
   return `<button class="fchip" data-g="${g.id}" data-k="${esc(k)}" aria-pressed="${!!sel[g.id]?.has(k)}">${dot}${esc(l).replace(/(\d[\d.]*\s*[–-]\s*\d[\d.]*\s*(?:W|K|°)?)/g,'<span class="ltr">$1</span>')}<span class="fc">${c}</span></button>`}).join("")}</div></div>`).join("")}
 
-let HOME=true,dept="תאורת_פנים",sub="",sort="",AQ=null,aiIds=null,limit=60;
+let HOME=true,FAM="",dept="תאורת_פנים",sub="",sort="",AQ=null,aiIds=null,limit=60;
 
 /* ---------- smart query parser (Hebrew, offline) ---------- */
 const HB="(?<=^|[\\s,])",HE="(?=$|[\\s,])";
@@ -977,6 +978,7 @@ function inScope(p){
  if(AQ)return aqMatch(p,AQ);
  if(p.dept!==dept)return false;
  if(sub&&p.sub!==sub)return false;
+ if(FAM&&p.fam!==FAM)return false;
  return true}
 const BYID=new Map(DATA.map(p=>[p.id,p]));const PACK={};
 function pack(kind,k){if(!k)return Promise.resolve({});return PACK[kind+k]||(PACK[kind+k]=fetch(`${kind}/${k}.json`).then(r=>r.ok?r.json():{}).catch(()=>{delete PACK[kind+k];return{}}))}
@@ -1028,8 +1030,9 @@ function render(){
  else if(!list.length){out.innerHTML=`<div class="empty">לא נמצאו דגמים שמתאימים. ${AQ?"נסו להרחיב את הטווח או להסיר חלק מהתנאים.":"נסו לנקות חלק מהסינונים."}</div>`}
  else if(searching()||sort){const l=sorted(list);
    out.innerHTML=`<section class="sec"><div class="sec-h"><span class="bar" style="background:var(--spectrum)"></span><div><h2>${aiIds?"הדגמים שהוצעו":SIM?"דגמים דומים ל"+esc(SIM.seed.short):AQ?"תוצאות בכל הקטלוג":sub?subL(sub):DL[dept]}</h2>${AQ&&!aiIds?`<p>${resultMix(l)}</p>`:""}</div><span class="cnt">${l.length}</span></div><div class="grid">${l.slice(0,limit).map(card).join("")}</div>${l.length>limit?`<button class="morebtn" data-more="1">הצגת עוד ${Math.min(60,l.length-limit)} מתוך ${l.length-limit} נוספים</button>`:""}</section>`}
+ else if(sub&&FAMSUB[sub]&&!FAM&&!Object.values(sel).some(x=>x.size))out.innerHTML=famCubes(list);
  else if(sub){const fams=[...new Set(list.map(p=>p.rec?REC[p.rec]:p.fam))];
-   out.innerHTML=fams.map(f=>{const l=list.filter(p=>(p.rec?REC[p.rec]:p.fam)===f);const c=l[0].col;return sec(c,f||subL(sub),"",l.length,l.map(card).join(""))}).join("")}
+   out.innerHTML=(FAM&&FAMSUB[sub]?`<div class="famback"><button type="button" data-famback="1">→ ${esc(FAMBACK[sub]||"חזרה")}</button><b>${esc(famL(FAM))}</b></div>`:"")+fams.map(f=>{const l=list.filter(p=>(p.rec?REC[p.rec]:p.fam)===f);const c=l[0].col;return sec(c,f||subL(sub),"",l.length,l.map(card).join(""))}).join("")}
  else out.innerHTML=SUBS[dept].map(s=>{const l=list.filter(p=>p.sub===s);if(!l.length)return"";const c=SUBCOL[dept+"/"+s];
    return sec(c,subL(s),(dept==="דרים_לייט"?SUBNOTE_D[s]:SUBNOTE[s])||"",l.length,l.slice(0,8).map(card).join(""),l.length>8?`<button class="morebtn" data-sub="${esc(s)}">לכל ${l.length} הדגמים ב${esc(subL(s))} ←</button>`:"")}).join("");
  const nf=Object.values(sel).reduce((s,x)=>s+x.size,0);
@@ -1046,7 +1049,7 @@ function drawNav(){
  $("#series").innerHTML=`<button class="chip all" data-c="" aria-pressed="${!searching()&&!sub}" style="--c:var(--ink)"><span class="th"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/></svg></span><span class="tx"><b>כל הקטגוריות</b><span>${DATA.filter(p=>p.dept===dept).length}</span></span></button>`+
  subs.map(s=>{const l=DATA.filter(p=>p.dept===dept&&p.sub===s);const r=l.find(p=>p.ni);
  return `<button class="chip" data-c="${esc(s)}" aria-pressed="${!searching()&&s===sub}" style="--c:${SUBCOL[dept+"/"+s]}"><span class="th">${r?`<img data-id="${r.id}" alt="">`:""}</span><span class="tx"><b>${esc(subL(s))}</b><span>${l.length}</span></span></button>`}).join("")}
-function go(d,s){HOME=false;dept=d;sub=s||"";limit=60;for(const g in sel)delete sel[g];if(searching())clearQ();render();document.querySelector(".tools").scrollIntoView({behavior:"smooth",block:"start"})}
+function go(d,s){HOME=false;FAM="";dept=d;sub=s||"";limit=60;for(const g in sel)delete sel[g];if(searching())clearQ();render();document.querySelector(".tools").scrollIntoView({behavior:"smooth",block:"start"})}
 
 /* ---------- header bits ---------- */
 const vcount=DATA.reduce((s,p)=>s+p.vars.length,0);
@@ -1468,6 +1471,17 @@ function cubes(){let n=0;const order=["תאורת_פנים","תאורת_חוץ",
  return `<div class="cats">${grp}${more}</div>`}
 function goHome(d){if(d)dept=d;HOME=true;sub="";sort="";$("#sort").value="";for(const g in sel)delete sel[g];if(searching())clearQ();render();
  const el=d&&document.getElementById("g-"+d);(el||$("#depts")).scrollIntoView({behavior:"smooth",block:"start"})}
+
+/* ---------- system cubes inside a category (e.g. magnetic systems) ---------- */
+const FAMSUB={"מערכות_מגנטיות":["מערכת פולס","מערכת מטרו","מערכת מגנטית נובה"]};
+const FAMBACK={"מערכות_מגנטיות":"כל המערכות המגנטיות"};
+const famL=f=>f.replace(/^מערכת\s+(מגנטית\s+)?/,"");
+function famCubes(list){const c={};list.forEach(p=>{c[p.fam]=(c[p.fam]||0)+1});const first=FAMSUB[sub].filter(f=>c[f]);
+ const fams=first.concat(Object.keys(c).filter(f=>f&&!first.includes(f)).sort((a,b)=>c[b]-c[a]));
+ return `<section class="cgrp"><div class="cgrp-h"><span class="no"></span><div><h2>${esc(subL(sub))}</h2><p>בחרו מערכת</p></div><span class="cnt">${list.length} דגמים</span></div><div class="cubes">${fams.map(f=>{const l=list.filter(p=>p.fam===f);const r=l.find(p=>p.ni&&/\d+(\.\d+)?W/.test(p.short)&&!/^(אביזר|מחבר|הזנה|סט )/.test(p.short)&&!/ספוט|שנאי|ספק/.test(p.short)&&/נשלף|תלוי|שקוע|מובלט|W - /.test(p.short))||l.find(p=>p.ni&&/\d+W/.test(p.short)&&!/^(אביזר|מחבר|הזנה)/.test(p.short))||l.find(p=>p.ni);
+  return `<button class="cube" data-fam="${esc(f)}" aria-label="${esc(f)}, ${l.length} דגמים">${r?`<img class="bg pr" data-id="${r.id}" alt="" decoding="async">`:""}<span class="tx"><span class="nm"><b>${esc(famL(f))}</b><small>${l.length} דגמים</small></span><span class="ar">${ARR}</span></span></button>`}).join("")}</div></section>`}
+$("#out").addEventListener("click",e=>{const f=e.target.closest(".cube[data-fam]");if(f){e.stopPropagation();FAM=f.dataset.fam;limit=60;render();document.querySelector(".tools").scrollIntoView({behavior:"smooth",block:"start"});return}
+ if(e.target.closest("[data-famback]")){FAM="";render();document.querySelector(".tools").scrollIntoView({behavior:"smooth",block:"start"})}});
 $("#out").addEventListener("click",e=>{const c=e.target.closest(".cube[data-s]");if(c){e.stopPropagation();go(c.dataset.d,c.dataset.s)}});
 /* hotspots in the scene */
 const HS=[[893,131,"תאורת_פנים","צמודי_תקרה",566],[250,214,"אביזרים","פסי_לד",955],[660,246,"תאורת_פנים","שקועי_תקרה",36],[797,266,"תאורת_פנים","מערכות_מגנטיות",356],[493,436,"תאורת_פנים","מנורות_תליה",1229],[610,360,"תאורת_פנים","גופי_קיר",479],[634,462,"תאורת_פנים","מנורות_שולחן_ועמידה",311],[787,408,"דרים_לייט","תלויי_עץ",3079],[200,400,"תאורת_חוץ","גופי_קיר",834],[1012,333,"תאורת_חוץ","גופי_קיר",835],[1005,628,"תאורת_חוץ","תאורת_שטיפה_ופנסי_הצפה",770],[378,684,"תאורת_חוץ","שקועי_רצפה",162],[575,702,"תאורת_חוץ","שביליות",176],[792,800,"תאורת_חוץ","עמודי_גן",299],[120,765,"תאורת_חוץ","דוקרני_גינה",317],[446,232,"תאורת_חוץ","צילינדרים",875]]
